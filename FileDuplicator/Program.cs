@@ -7,6 +7,7 @@ namespace FileDuplicator
     {
         static void Main(string[] args)
         {
+
             var startApp = new AppLogic();
 
             startApp.Start();

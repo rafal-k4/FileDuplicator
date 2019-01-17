@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using FileDuplicator.Configuration;
 using System.IO;
+using System.Linq;
 
 namespace FileDuplicator
 {
@@ -11,13 +12,13 @@ namespace FileDuplicator
 
         public void Start()
         {
-            Console.WriteLine("Copy config files to: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
+            Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
             var configurationChoice = Console.ReadLine().ToUpper();
 
             switch (configurationChoice)
             {
                 case "RO":
-
+                    CopyFile(configurationChoice);
                     break;
                 case "RU":
 
@@ -32,32 +33,50 @@ namespace FileDuplicator
                     break;
             }
 
-            var pathFileToConfigs = new AppsettingsRetriever().GetRomaniaConfigFolder();
+        }
 
-            var dir = new DirectoryInfo(pathFileToConfigs);
+        public void CopyFile(string confChoice)
+        {
+            var dirInfo = new DirectoryInfo(new AppsettingsRetriever().GetWebConfigFilePath());
 
-            var file = Directory.GetFiles(pathFileToConfigs, "web.config");
-            
-            if(file.Length != 1)
+            var directories = dirInfo.GetDirectories().Where(x => x.Name == confChoice);
+
+            if(directories.Count() != 1)
             {
-                throw new Exception("web.config not found");
+                throw new Exception($"Directory {confChoice} not found, please check appsettings.json or parent directory");
             }
 
-            File.Copy()
 
-            File.Copy(file[0], @"d:\temp.config", true);
-            File.Copy(file[0], @"d:\temp.config");
 
-            var filepaths = Directory.GetDirectories(pathFileToConfigs);
+            //File.Copy(file[0], @"d:\temp.config", true);
+            //File.Copy(file[0], @"d:\temp.config");
 
-            var txt = Directory.GetFiles(pathFileToConfigs);
 
-            foreach (var item in txt)
-            {
-                Console.WriteLine(item);
-                
-                
-            }
+
+            //var dir = new DirectoryInfo(configFilePath);
+
+            //var file = Directory.GetFiles(configFilePath, "web.config");
+
+            //if (file.Length != 1)
+            //{
+            //    throw new Exception("web.config not found");
+            //}
+
+            ////File.Copy()
+
+            //File.Copy(file[0], @"d:\temp.config", true);
+            //File.Copy(file[0], @"d:\temp.config");
+
+            //var filepaths = Directory.GetDirectories(configFilePath);
+
+            //var txt = Directory.GetFiles(configFilePath);
+
+            //foreach (var item in txt)
+            //{
+            //    Console.WriteLine(item);
+
+
+            //}
             Console.Read();
         }
     }

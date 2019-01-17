@@ -4,23 +4,16 @@ namespace FileDuplicator.Configuration
 {
     public class AppsettingsModel
     {
-        [JsonProperty(propertyName: "PathFolders")]
+        [JsonProperty(propertyName: "WebConfigPaths")]
         public ConfigFolders ConfigPathFolder { get; set; }
 
 
         public class ConfigFolders
         {
-            [JsonProperty(propertyName: "ConfigPathFolder")]
+            [JsonProperty(propertyName: "WebConfigPathFolder")]
             public string ConfigPathFolder { get; set; }
-            [JsonProperty(propertyName: "RussiaConfigFolder")]
-            public string RussiaConfigFolder { get; set; }
-            [JsonProperty(propertyName: "RomaniaConfigFolder")]
-            public string RomaniaConfigFolder { get; set; }
-            [JsonProperty(propertyName: "PolishConfigFolder")]
-            public string PolishConfigFolder { get; set; }
-            [JsonProperty(propertyName: "DefaultConfigFolder")]
-            public string DefaultConfigFolder { get; set; }
-            [JsonProperty(propertyName: "DestinationConfigFile")]
+
+            [JsonProperty(propertyName: "DestinationWebConfigFile")]
             public string DestinationConfigFile { get; set; }
         }
     }

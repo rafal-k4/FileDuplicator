@@ -9,22 +9,20 @@ namespace FileDuplicator.Configuration
 {
     public class AppsettingsRetriever
     {
-        public string GetConfigFilePath()
+        public string GetWebConfigFilePath()
         => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.ConfigPathFolder);
 
-        public string GetPolishConfigFolder()
-            => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.PolishConfigFolder);
+        public string GetDestinationWebConfigFile()
+        => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DestinationConfigFile);
 
-        public string GetRussiaConfigFolder()
-            => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.RussiaConfigFolder);
-
-        public string GetRomaniaConfigFolder()
-            => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.RomaniaConfigFolder);
-
-        public string GetDefaultConfigFolder()
-            => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DefaultConfigFolder);
-
-
+        public IEnumerable<string> GetAllConfigFolder()
+            => Execute<AppsettingsModel, IEnumerable<string>>(x =>
+                new string[] 
+                {
+                    x.ConfigPathFolder.ConfigPathFolder,
+                    x.ConfigPathFolder.DestinationConfigFile
+                }
+            );
 
         private U Execute<T, U>(Func<T,U> func)
         {
