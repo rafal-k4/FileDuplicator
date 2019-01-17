@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.271
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileDuplicator", "FileDuplicator\FileDuplicator.csproj", "{84623ADD-DA67-4A98-87D1-3D2D8DFD161E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{84623ADD-DA67-4A98-87D1-3D2D8DFD161E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{84623ADD-DA67-4A98-87D1-3D2D8DFD161E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{84623ADD-DA67-4A98-87D1-3D2D8DFD161E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{84623ADD-DA67-4A98-87D1-3D2D8DFD161E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CAE8B4A8-9064-4005-8321-9B2A9817156A}
+	EndGlobalSection
+EndGlobal
