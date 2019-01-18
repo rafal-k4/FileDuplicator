@@ -12,6 +12,7 @@ namespace FileDuplicator
 
             startApp.Start();
 
+            Console.Read();
         }
     }
 }
