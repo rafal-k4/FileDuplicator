@@ -4,6 +4,7 @@ using System.Text;
 using FileDuplicator.Configuration;
 using Newtonsoft.Json;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace FileDuplicator.Configuration
 {
@@ -28,10 +29,17 @@ namespace FileDuplicator.Configuration
         {
             string appsettingsFileContent = string.Empty;
 
-            string path = Environment.CurrentDirectory;
+            var path = Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly().CodeBase);
+
+            Regex appPathMatcher = new Regex(@"(?<!fil)[A-Za-z]:\\+[\S\s]*?(?=\\+bin)");
+
+            var appRootPath = appPathMatcher.Match(path).Value;
+
+            //string path = Environment.CurrentDirectory;
             try
             {
-                var sr = new StreamReader(path + @"\appsettings.json");
+                path = Path.Combine(appRootPath, "appsettings.json");
+                var sr = new StreamReader(path);
                 appsettingsFileContent = sr.ReadToEnd();
             }
             catch (Exception)

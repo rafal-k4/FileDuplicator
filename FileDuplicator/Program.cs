@@ -7,12 +7,17 @@ namespace FileDuplicator
     {
         static void Main(string[] args)
         {
+            if(args.Length != 0)
+            {
+                var startApp = new AppLogic();
 
-            var startApp = new AppLogic();
+                startApp.Start(args[0]);
 
-            startApp.Start();
-
-            Console.Read();
+            }
+            else
+            {
+                Console.WriteLine("Choose one of this option {RO - Romania, RU - Russia, PL - Poland, DEF - default} as parameter");
+            }
         }
     }
 }

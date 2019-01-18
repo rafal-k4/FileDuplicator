@@ -10,12 +10,12 @@ namespace FileDuplicator
     public class AppLogic
     {
 
-        public void Start()
+        public void Start(string configurationChoice)
         {
-            Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
-            var configurationChoice = Console.ReadLine().ToUpper();
+            //Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
+            //var configurationChoice = Console.ReadLine().ToUpper();
 
-            switch (configurationChoice)
+            switch (configurationChoice.ToUpper())
             {
                 case "RO":
                     CopyFile(Const.DirectoriesName.RomaniaDirectory);
@@ -52,6 +52,8 @@ namespace FileDuplicator
 
            
             file.CopyTo(appsettingsObj.GetDestinationWebConfigFile(),true);
+
+            Console.WriteLine("File copied successfully");
         }
     }
 }

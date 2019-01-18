@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "FileDuplicator": {
+      "commandName": "Project",
+      "commandLineArgs": "ro"
+    }
+  }
+}
