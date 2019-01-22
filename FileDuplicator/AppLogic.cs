@@ -10,10 +10,24 @@ namespace FileDuplicator
     public class AppLogic
     {
 
-        public void Start(string configurationChoice)
+        public void Start(string[] confParams)
         {
+            ConfigurationModel confModel = new ConfigurationModel();
+
+
+            if(confParams.Any(x => x.ToLower() == Const.AdditionalParameters.BrowserLinkParameter.ToLower()))
+            {
+                confModel.IsBrowserLink = true;
+
+            }
             //Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
             //var configurationChoice = Console.ReadLine().ToUpper();
+            var configurationChoice = confParams.Any()
+
+
+            var appsettingsObj = new AppsettingsRetriever();
+            var dirInfo = new DirectoryInfo(appsettingsObj.GetWebConfigFilePath());
+            var directories = dirInfo.GetDirectories().Where(x => x.Name.ToLower() == configurationChoice.ToLower());
 
             switch (configurationChoice.ToUpper())
             {

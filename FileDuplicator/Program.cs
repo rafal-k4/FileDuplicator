@@ -11,12 +11,12 @@ namespace FileDuplicator
             {
                 var startApp = new AppLogic();
 
-                startApp.Start(args[0]);
+                startApp.Start(args);
 
             }
             else
             {
-                Console.WriteLine("Choose one of this option {RO - Romania, RU - Russia, PL - Poland, DEF - default} as parameter");
+                Console.WriteLine("Folder not found, please insert Configuration Folder Name and addidtionally -b as parameter in case to activate Browser Link ");
             }
         }
     }
