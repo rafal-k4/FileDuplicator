@@ -22,8 +22,8 @@ namespace FileDuplicator
             }
             //Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
             //var configurationChoice = Console.ReadLine().ToUpper();
-            var configurationChoice = confParams.Any()
-
+            //var configurationChoice = confParams.Any();
+            var configurationChoice = "a";
 
             var appsettingsObj = new AppsettingsRetriever();
             var dirInfo = new DirectoryInfo(appsettingsObj.GetWebConfigFilePath());
