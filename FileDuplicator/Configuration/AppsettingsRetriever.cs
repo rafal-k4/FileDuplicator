@@ -53,10 +53,10 @@ namespace FileDuplicator.Configuration
 
             var appRootPath = appPathMatcher.Match(path).Value;
 
+            path = Path.Combine(appRootPath, "appsettings.json");
             //string path = Environment.CurrentDirectory;
             try
             {
-                path = Path.Combine(appRootPath, "appsettings.json");
                 var sr = new StreamReader(path);
                 appsettingsFileContent = sr.ReadToEnd();
             }
