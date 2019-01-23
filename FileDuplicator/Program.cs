@@ -10,14 +10,14 @@ namespace FileDuplicator
     {
         private static void Main(string[] args)
         {
-            var asd = new string[] { "ro", "-b"};
-            Parser.Default.ParseArguments<Option>(asd).
+            
+            Parser.Default.ParseArguments<Option>(args).
                 WithParsed(x =>
                 {
-                    Console.WriteLine(x.ChosenFolder.First());
-                    Console.WriteLine(x.IsBrowserLink);
+                    var appLogic = new AppLogic();
+                    appLogic.Start(x.ChosenFolder.First(), x.IsBrowserLink);
                 });
-            ;
+            
         }
     }
 

@@ -10,10 +10,13 @@ namespace FileDuplicator
     public class AppLogic
     {
 
-        public void Start(string confParams)
+        public void Start(string confParams, bool isBrowserLinkEnabled)
         {
-            
+            var webConfig = isBrowserLinkEnabled ? Const.ConfigFiles.WebConfigWithBrowserLinkFileName : Const.ConfigFiles.WebConfigFileName;
 
+            var directory = SearchForDirectory(confParams);
+
+            //var files = SearchForFilesToCopy()
 
             //if(confParams.Any(x => x.ToLower() == Const.AdditionalParameters.BrowserLinkParameter.ToLower()))
             //{
@@ -45,6 +48,18 @@ namespace FileDuplicator
             //        Console.WriteLine("Typed wrong option");
             //        break;
             //}
+
+        }
+
+        private DirectoryInfo SearchForDirectory(string confParams)
+        {
+            var dirInfo = new DirectoryInfo(new AppsettingsRetriever().GetWebConfigFilePath());
+
+            var directories = dirInfo.GetDirectories();
+
+            var searchedDirectory = directories.Select(x => x).Where(y => y.Name.ToLower() == confParams.ToLower());
+
+            return (searchedDirectory.Count() == 1) ? searchedDirectory.First() : throw new Exception($"Directory {confParams} not found");
 
         }
 
