@@ -10,43 +10,41 @@ namespace FileDuplicator
     public class AppLogic
     {
 
-        public void Start(string[] confParams)
+        public void Start(string confParams)
         {
-            ConfigurationModel confModel = new ConfigurationModel();
+            
 
 
-            if(confParams.Any(x => x.ToLower() == Const.AdditionalParameters.BrowserLinkParameter.ToLower()))
-            {
-                confModel.IsBrowserLink = true;
+            //if(confParams.Any(x => x.ToLower() == Const.AdditionalParameters.BrowserLinkParameter.ToLower()))
+            //{
+            //    confModel.IsBrowserLink = true;
 
-            }
-            //Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
-            //var configurationChoice = Console.ReadLine().ToUpper();
-            //var configurationChoice = confParams.Any();
+            //}
+
             var configurationChoice = "a";
 
             var appsettingsObj = new AppsettingsRetriever();
             var dirInfo = new DirectoryInfo(appsettingsObj.GetWebConfigFilePath());
             var directories = dirInfo.GetDirectories().Where(x => x.Name.ToLower() == configurationChoice.ToLower());
 
-            switch (configurationChoice.ToUpper())
-            {
-                case "RO":
-                    CopyFile(Const.DirectoriesName.RomaniaDirectory);
-                    break;
-                case "RU":
-                    CopyFile(Const.DirectoriesName.RussiaDirectory);
-                    break;
-                case "PL":
-                    CopyFile(Const.DirectoriesName.PolandDirectory);
-                    break;
-                case "DEF":
-                    CopyFile(Const.DirectoriesName.DefaultDirectory);
-                    break;
-                default:
-                    Console.WriteLine("Typed wrong option");
-                    break;
-            }
+            //switch (configurationChoice.ToUpper())
+            //{
+            //    case "RO":
+            //        CopyFile(Const.DirectoriesName.RomaniaDirectory);
+            //        break;
+            //    case "RU":
+            //        CopyFile(Const.DirectoriesName.RussiaDirectory);
+            //        break;
+            //    case "PL":
+            //        CopyFile(Const.DirectoriesName.PolandDirectory);
+            //        break;
+            //    case "DEF":
+            //        CopyFile(Const.DirectoriesName.DefaultDirectory);
+            //        break;
+            //    default:
+            //        Console.WriteLine("Typed wrong option");
+            //        break;
+            //}
 
         }
 
