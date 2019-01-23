@@ -8,24 +8,42 @@ using System.Text.RegularExpressions;
 
 namespace FileDuplicator.Configuration
 {
-    public class AppsettingsRetriever
+    public class AppsettingsRetriever : IPathRetriever
     {
-        public string GetWebConfigFilePath()
-        => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.ConfigPathFolder);
 
-        public string GetDestinationWebConfigFile()
-        => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DestinationConfigFile);
 
-        public IEnumerable<string> GetAllConfigFolder()
-            => Execute<AppsettingsModel, IEnumerable<string>>(x =>
-                new string[] 
+        public DirectoryInfo GetDirectory()
+            => ExecuteConversionFromJson<AppsettingsModel, DirectoryInfo>(x => new DirectoryInfo(x?.ConfigPaths.ConfigPathFolder));
+
+        //public FileInfo GetDestinationFile(string fileName)
+        //    => Execute<AppsettingsModel, FileInfo>(x => new FileInfo(x?.ConfigPathFolder.DestinationWebConfigFile));
+
+        public FileInfo GetDestinationFile(string fileName)
+            => ExecuteConversionFromJson<AppsettingsModel, FileInfo>(x =>
+            {
+                var properties = x.ConfigPaths.GetType().GetProperties();
+                foreach (var property in properties)
                 {
-                    x.ConfigPathFolder.ConfigPathFolder,
-                    x.ConfigPathFolder.DestinationConfigFile
-                }
-            );
+                    var prop = property.GetValue(x.ConfigPaths).ToString();
+                    if (prop.ToLower() == fileName.ToLower())
+                        return new FileInfo(prop);
 
-        private U Execute<T, U>(Func<T,U> func)
+                }
+                return null;
+            });
+
+
+
+
+        //public string GetWebConfigFilePath()
+        //=> Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.ConfigPathFolder);
+
+        //public string GetDestinationWebConfigFile()
+        //=> Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DestinationConfigFile);
+
+
+
+        private U ExecuteConversionFromJson<T, U>(Func<T, U> func)
         {
             string appsettingsFileContent = string.Empty;
 
@@ -47,11 +65,16 @@ namespace FileDuplicator.Configuration
                 Console.WriteLine("appsettings.json doesnt exist or is corrupted");
                 throw;
             }
-            
+
             var obj = JsonConvert.DeserializeObject<T>(appsettingsFileContent);
 
             return func.Invoke(obj);
         }
 
     }
+
+    //interface ITest
+    //{
+    //    T Execute<T, U>(Func<T, U> func);
+    //}
 }
