@@ -24,8 +24,11 @@ namespace FileDuplicator
         {
             //at this point all dependencies can be added
             //to the DI system via service collection
-            service.AddScoped(typeof(IAppLogic), typeof(AppLogic));
-            service.AddScoped(typeof(IPathRetriever), typeof(AppsettingsRetriever));
+
+            service.AddScoped<IPathRetriever, AppsettingsRetriever>();
+            service.AddScoped<IAppLogic, AppLogic>();
+            //service.AddScoped(typeof(IAppLogic), typeof(AppLogic));
+            //service.AddScoped(typeof(IPathRetriever), typeof(AppsettingsRetriever));
             //service.AddScoped(typeof(IAppLogic), typeof(AppLogic));
 
             //configuration are heavily used in the .net core DI
