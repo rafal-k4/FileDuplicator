@@ -1,23 +1,30 @@
-﻿using System;
+﻿using CommandLine;
+using CommandLine.Text;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using Microsoft.Extensions.DependencyInjection;
+
+
 
 
 namespace FileDuplicator
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
-            if(args.Length != 0)
-            {
-                var startApp = new AppLogic();
-
-                startApp.Start(args);
-
-            }
-            else
-            {
-                Console.WriteLine("Folder not found, please insert Configuration Folder Name and addidtionally -b as parameter in case to activate Browser Link ");
-            }
+            var di = new DependencyInjection();
+            di.Builder();
+            ;
+            Parser.Default.ParseArguments<Option>(args).
+                WithParsed(x =>
+                {
+                    var appLogic = di.ServiceProvider.GetService<IAppLogic>();
+                    appLogic.Start(x.ChosenFolder.First(), x.IsBrowserLink);
+                });
+            
         }
     }
+
 }

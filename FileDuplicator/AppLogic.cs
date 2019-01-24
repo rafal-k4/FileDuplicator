@@ -7,67 +7,38 @@ using System.Linq;
 
 namespace FileDuplicator
 {
-    public class AppLogic
+    public class AppLogic : IAppLogic
     {
+        private IPathRetriever pathRetriever;
 
-        public void Start(string[] confParams)
+        public AppLogic(IPathRetriever pathRetriever)
         {
-            ConfigurationModel confModel = new ConfigurationModel();
-
-
-            if(confParams.Any(x => x.ToLower() == Const.AdditionalParameters.BrowserLinkParameter.ToLower()))
-            {
-                confModel.IsBrowserLink = true;
-
-            }
-            //Console.WriteLine("Copy config files from: {type: RO - Romania, RU - Russia, PL - Poland, DEF - default}");
-            //var configurationChoice = Console.ReadLine().ToUpper();
-            var configurationChoice = confParams.Any()
-
-
-            var appsettingsObj = new AppsettingsRetriever();
-            var dirInfo = new DirectoryInfo(appsettingsObj.GetWebConfigFilePath());
-            var directories = dirInfo.GetDirectories().Where(x => x.Name.ToLower() == configurationChoice.ToLower());
-
-            switch (configurationChoice.ToUpper())
-            {
-                case "RO":
-                    CopyFile(Const.DirectoriesName.RomaniaDirectory);
-                    break;
-                case "RU":
-                    CopyFile(Const.DirectoriesName.RussiaDirectory);
-                    break;
-                case "PL":
-                    CopyFile(Const.DirectoriesName.PolandDirectory);
-                    break;
-                case "DEF":
-                    CopyFile(Const.DirectoriesName.DefaultDirectory);
-                    break;
-                default:
-                    Console.WriteLine("Typed wrong option");
-                    break;
-            }
-
+            this.pathRetriever = pathRetriever;
         }
 
-        public void CopyFile(string confChoice)
+        public void Start(string folderName, bool isBrowserLinkEnabled)
         {
-            var appsettingsObj = new AppsettingsRetriever();
 
-            var dirInfo = new DirectoryInfo(appsettingsObj.GetWebConfigFilePath());
+            var webConfig = isBrowserLinkEnabled ? Const.ConfigFiles.WebConfigWithBrowserLinkFileName : Const.ConfigFiles.WebConfigFileName;
 
-            var directories = dirInfo.GetDirectories().Where(x => x.Name.ToLower() == confChoice.ToLower());
 
-            var directory = (directories.Count() == 1) ? directories.First() : throw new Exception($"Directory {confChoice} not found, please check appsettings.json or parent directory");
+            //get Folder from which files will be copied
+            var chosenDirectoryPath = pathRetriever.GetDirectory().GetDirectories().GetSpecifiedDirectory(folderName);
 
-            var Files = directory.GetFiles().Where(x => x.Name.ToLower() == Const.ConfigFiles.WebConfigFileName.ToLower()); ;
+            //get webconfig and appconfig file to copy
+            var webConfigPath = chosenDirectoryPath.GetFiles().GetSpecifiedFile(webConfig);
+            var appConfigPath = chosenDirectoryPath.GetFiles().GetSpecifiedFile(Const.ConfigFiles.AppConfigFileName);
 
-            var file = (Files.Count() == 1) ? Files.First() : throw new Exception($"File {Const.ConfigFiles.WebConfigFileName} not found");
+            //copy files to destined folder
+            CopyFile(webConfigPath, pathRetriever.GetDestinationFile(Const.ConfigFiles.WebConfigFileName).FullName);
+            CopyFile(appConfigPath, pathRetriever.GetDestinationFile(Const.ConfigFiles.AppConfigFileName).FullName);
+        }
 
+        public void CopyFile(FileInfo file, string copyToPath)
+        {
            
-            file.CopyTo(appsettingsObj.GetDestinationWebConfigFile(),true);
-
-            Console.WriteLine("File copied successfully");
+            file.CopyTo(copyToPath, true);
+           
         }
     }
 }

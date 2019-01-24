@@ -1,31 +1,62 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FileDuplicator.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
 namespace FileDuplicator.Configuration
 {
-    public class AppsettingsRetriever
+    public class AppsettingsRetriever : IPathRetriever
     {
-        public string GetWebConfigFilePath()
-        => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.ConfigPathFolder);
+        private readonly IConfigurationRoot confRoot;
+        public AppsettingsRetriever(IConfigurationRoot configurationRoot)
+        {
+            confRoot = configurationRoot;
+        }
 
-        public string GetDestinationWebConfigFile()
-        => Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DestinationConfigFile);
+        //public DirectoryInfo GetDirectory()
+        //    => ExecuteConversionFromJson<AppsettingsModel, DirectoryInfo>(x => new DirectoryInfo(x?.ConfigPaths.ConfigPathFolder));
 
-        public IEnumerable<string> GetAllConfigFolder()
-            => Execute<AppsettingsModel, IEnumerable<string>>(x =>
-                new string[] 
+        //public FileInfo GetDestinationFile(string fileName)
+        //    => ExecuteConversionFromJson<AppsettingsModel, FileInfo>(x =>
+        //    {
+        //        var properties = x.ConfigPaths.GetType().GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            var prop = property.GetValue(x.ConfigPaths).ToString();
+        //            if(prop is string d && d.Contains(fileName))
+        //            {
+        //                return new FileInfo(d);
+        //            }
+        //        }
+        //        return null;
+        //    });
+
+        public DirectoryInfo GetDirectory()
+        {
+            var section = confRoot.GetSection("Paths");
+            var subSection = section.GetSection("WebConfigPathFolder");
+            return new DirectoryInfo(subSection.Value);
+        }
+
+
+
+        public FileInfo GetDestinationFile(string fileName)
+        {
+            var section = confRoot.GetSection("Paths");
+            var subSections = section.GetChildren();
+            foreach (var subSection in subSections)
+            {
+                if (subSection.Value.Contains(fileName))
                 {
-                    x.ConfigPathFolder.ConfigPathFolder,
-                    x.ConfigPathFolder.DestinationConfigFile
+                    return new FileInfo(subSection.Value);
                 }
-            );
+            }
+            return null;
+        }
 
-        private U Execute<T, U>(Func<T,U> func)
+
+        private U ExecuteConversionFromJson<T, U>(Func<T, U> func)
         {
             string appsettingsFileContent = string.Empty;
 
@@ -35,10 +66,10 @@ namespace FileDuplicator.Configuration
 
             var appRootPath = appPathMatcher.Match(path).Value;
 
+            path = Path.Combine(appRootPath, "appsettings.json");
             //string path = Environment.CurrentDirectory;
             try
             {
-                path = Path.Combine(appRootPath, "appsettings.json");
                 var sr = new StreamReader(path);
                 appsettingsFileContent = sr.ReadToEnd();
             }
@@ -47,11 +78,16 @@ namespace FileDuplicator.Configuration
                 Console.WriteLine("appsettings.json doesnt exist or is corrupted");
                 throw;
             }
-            
+
             var obj = JsonConvert.DeserializeObject<T>(appsettingsFileContent);
 
             return func.Invoke(obj);
         }
 
     }
+
+    //interface ITest
+    //{
+    //    T Execute<T, U>(Func<T, U> func);
+    //}
 }
