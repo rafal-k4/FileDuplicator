@@ -14,40 +14,37 @@ namespace FileDuplicator.Configuration
             confRoot = configurationRoot;
         }
 
-        //public DirectoryInfo GetDirectory()
-        //    => ExecuteConversionFromJson<AppsettingsModel, DirectoryInfo>(x => new DirectoryInfo(x?.ConfigPaths.ConfigPathFolder));
 
-        //public FileInfo GetDestinationFile(string fileName)
+        //public FileInfo GetDestinationFile(string propertyName)
         //    => ExecuteConversionFromJson<AppsettingsModel, FileInfo>(x =>
         //    {
         //        var properties = x.ConfigPaths.GetType().GetProperties();
         //        foreach (var property in properties)
         //        {
-        //            var prop = property.GetValue(x.ConfigPaths).ToString();
-        //            if(prop is string d && d.Contains(fileName))
+        //            if (property.Name == propertyName)
         //            {
-        //                return new FileInfo(d);
+        //                return new FileInfo(property.GetValue(x.ConfigPaths).ToString());
         //            }
         //        }
         //        return null;
         //    });
 
-        public DirectoryInfo GetDirectory()
+        public DirectoryInfo GetDirectory(string sectionName)
         {
             var section = confRoot.GetSection("Paths");
-            var subSection = section.GetSection("WebConfigPathFolder");
+            var subSection = section.GetSection(sectionName);
             return new DirectoryInfo(subSection.Value);
         }
 
 
 
-        public FileInfo GetDestinationFile(string fileName)
+        public FileInfo GetDestinationFile(string sectionName)
         {
             var section = confRoot.GetSection("Paths");
             var subSections = section.GetChildren();
             foreach (var subSection in subSections)
             {
-                if (subSection.Value.Contains(fileName))
+                if (subSection.Key == sectionName)
                 {
                     return new FileInfo(subSection.Value);
                 }

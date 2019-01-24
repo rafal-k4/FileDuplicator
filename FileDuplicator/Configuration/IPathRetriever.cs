@@ -7,7 +7,7 @@ namespace FileDuplicator.Configuration
 {
     public interface IPathRetriever
     {
-        DirectoryInfo GetDirectory();
-        FileInfo GetDestinationFile(string fileName);
+        DirectoryInfo GetDirectory(string sectionName);
+        FileInfo GetDestinationFile(string sectionName);
     }
 }

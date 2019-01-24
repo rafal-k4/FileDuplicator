@@ -21,17 +21,17 @@ namespace FileDuplicator
 
             var webConfig = isBrowserLinkEnabled ? Const.ConfigFiles.WebConfigWithBrowserLinkFileName : Const.ConfigFiles.WebConfigFileName;
 
-
             //get Folder from which files will be copied
-            var chosenDirectoryPath = pathRetriever.GetDirectory().GetDirectories().GetSpecifiedDirectory(folderName);
+            var chosenDirectoryPath = pathRetriever.GetDirectory(Const.AppsettingsJsonSection.ConfigFolderSectionName)
+                .GetDirectories().GetSpecifiedDirectory(folderName);
 
             //get webconfig and appconfig file to copy
             var webConfigPath = chosenDirectoryPath.GetFiles().GetSpecifiedFile(webConfig);
             var appConfigPath = chosenDirectoryPath.GetFiles().GetSpecifiedFile(Const.ConfigFiles.AppConfigFileName);
 
             //copy files to destined folder
-            CopyFile(webConfigPath, pathRetriever.GetDestinationFile(Const.ConfigFiles.WebConfigFileName).FullName);
-            CopyFile(appConfigPath, pathRetriever.GetDestinationFile(Const.ConfigFiles.AppConfigFileName).FullName);
+            CopyFile(webConfigPath, pathRetriever.GetDestinationFile(Const.AppsettingsJsonSection.DestinationWebConfigFileSectionName).FullName);
+            CopyFile(appConfigPath, pathRetriever.GetDestinationFile(Const.AppsettingsJsonSection.DestinationTranslationAppConfigFileSectionName).FullName);
         }
 
         public void CopyFile(FileInfo file, string copyToPath)
