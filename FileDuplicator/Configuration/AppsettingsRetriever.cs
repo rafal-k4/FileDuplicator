@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using FileDuplicator.Configuration;
+﻿using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using System;
 using System.IO;
 using System.Text.RegularExpressions;
 
@@ -10,37 +8,52 @@ namespace FileDuplicator.Configuration
 {
     public class AppsettingsRetriever : IPathRetriever
     {
+        private readonly IConfigurationRoot confRoot;
+        public AppsettingsRetriever(IConfigurationRoot configurationRoot)
+        {
+            confRoot = configurationRoot;
+        }
 
-
-        public DirectoryInfo GetDirectory()
-            => ExecuteConversionFromJson<AppsettingsModel, DirectoryInfo>(x => new DirectoryInfo(x?.ConfigPaths.ConfigPathFolder));
+        //public DirectoryInfo GetDirectory()
+        //    => ExecuteConversionFromJson<AppsettingsModel, DirectoryInfo>(x => new DirectoryInfo(x?.ConfigPaths.ConfigPathFolder));
 
         //public FileInfo GetDestinationFile(string fileName)
-        //    => Execute<AppsettingsModel, FileInfo>(x => new FileInfo(x?.ConfigPathFolder.DestinationWebConfigFile));
+        //    => ExecuteConversionFromJson<AppsettingsModel, FileInfo>(x =>
+        //    {
+        //        var properties = x.ConfigPaths.GetType().GetProperties();
+        //        foreach (var property in properties)
+        //        {
+        //            var prop = property.GetValue(x.ConfigPaths).ToString();
+        //            if(prop is string d && d.Contains(fileName))
+        //            {
+        //                return new FileInfo(d);
+        //            }
+        //        }
+        //        return null;
+        //    });
+
+        public DirectoryInfo GetDirectory()
+        {
+            var section = confRoot.GetSection("Paths");
+            var subSection = section.GetSection("WebConfigPathFolder");
+            return new DirectoryInfo(subSection.Value);
+        }
+
+
 
         public FileInfo GetDestinationFile(string fileName)
-            => ExecuteConversionFromJson<AppsettingsModel, FileInfo>(x =>
+        {
+            var section = confRoot.GetSection("Paths");
+            var subSections = section.GetChildren();
+            foreach (var subSection in subSections)
             {
-                var properties = x.ConfigPaths.GetType().GetProperties();
-                foreach (var property in properties)
+                if (subSection.Value.Contains(fileName))
                 {
-                    var prop = property.GetValue(x.ConfigPaths).ToString();
-                    if (prop.ToLower() == fileName.ToLower())
-                        return new FileInfo(prop);
-
+                    return new FileInfo(subSection.Value);
                 }
-                return null;
-            });
-
-
-
-
-        //public string GetWebConfigFilePath()
-        //=> Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.ConfigPathFolder);
-
-        //public string GetDestinationWebConfigFile()
-        //=> Execute<AppsettingsModel, string>(x => x?.ConfigPathFolder?.DestinationConfigFile);
-
+            }
+            return null;
+        }
 
 
         private U ExecuteConversionFromJson<T, U>(Func<T, U> func)

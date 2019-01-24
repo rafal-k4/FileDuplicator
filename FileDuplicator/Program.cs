@@ -16,7 +16,7 @@ namespace FileDuplicator
         {
             var di = new DependencyInjection();
             di.Builder();
-
+            ;
             Parser.Default.ParseArguments<Option>(args).
                 WithParsed(x =>
                 {

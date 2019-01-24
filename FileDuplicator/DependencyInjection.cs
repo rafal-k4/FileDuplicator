@@ -27,10 +27,7 @@ namespace FileDuplicator
 
             service.AddScoped<IPathRetriever, AppsettingsRetriever>();
             service.AddScoped<IAppLogic, AppLogic>();
-            //service.AddScoped(typeof(IAppLogic), typeof(AppLogic));
-            //service.AddScoped(typeof(IPathRetriever), typeof(AppsettingsRetriever));
-            //service.AddScoped(typeof(IAppLogic), typeof(AppLogic));
-
+            
             //configuration are heavily used in the .net core DI
             //for configuring services, so can be done usage of that
             var configurationBuilder = new ConfigurationBuilder();
@@ -41,9 +38,9 @@ namespace FileDuplicator
             var configuration = configurationBuilder.Build();
 
             //Inject the configuration into the DI system
-            service.AddSingleton<IConfiguration>(configuration);
-            
+            //service.AddSingleton<IConfiguration>(configuration);
 
+            service.AddSingleton(configuration);
             // builder service provider
             ServiceProvider = service.BuildServiceProvider();
 
