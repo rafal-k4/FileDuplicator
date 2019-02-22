@@ -2,7 +2,7 @@
   "profiles": {
     "FileDuplicator": {
       "commandName": "Project",
-      "commandLineArgs": "def"
+      "commandLineArgs": "config def"
     }
   }
 }

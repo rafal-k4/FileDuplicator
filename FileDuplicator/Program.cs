@@ -15,14 +15,51 @@ namespace FileDuplicator
         private static void Main(string[] args)
         {
             var di = new DependencyInjection();
-            di.Builder();
 
-            Parser.Default.ParseArguments<Option>(args).
-                WithParsed(x =>
+
+            Parser.Default.ParseArguments<Option, UnitTestScripts>(args).
+                MapResult((Option opt) => 
                 {
+                    di.Builder(DependencyInjection.StrategyOption.WebConfig);
+
                     var appLogic = di.ServiceProvider.GetService<IAppLogic>();
-                    appLogic.Start(x.ChosenFolder.First(), x.IsBrowserLink);
-                });
+                    appLogic.Start(opt.ChosenFolder.First(), opt.IsBrowserLink);
+
+                    return 0;
+                },
+                (UnitTestScripts scr) =>
+                {
+                    di.Builder(DependencyInjection.StrategyOption.UnitTestScripts);
+
+                    var appLogic = di.ServiceProvider.GetService<IAppLogic>();
+                    appLogic.Start(scr.ScriptsFolderName, false);
+
+                    return 0;
+                }, 
+                errs => 1);
+
+
+            //Parser.Default.ParseArguments<UnitTestScripts>(args).
+            //   WithParsed( x => 
+            //   {
+            //       di.Builder(DependencyInjection.StrategyOption.UnitTestScripts);
+
+            //       var appLogic = di.ServiceProvider.GetService<IAppLogic>();
+            //       appLogic.Start("abc", true);
+
+            //       Environment.Exit(0);
+            //   });
+
+            //Parser.Default.ParseArguments<Option>(args).
+            //    WithParsed(x =>
+            //    {
+            //        di.Builder(DependencyInjection.StrategyOption.WebConfig);
+
+            //        var appLogic = di.ServiceProvider.GetService<IAppLogic>();
+            //        appLogic.Start(x.ChosenFolder.First(), x.IsBrowserLink);
+
+            //        Environment.Exit(0);
+            //    });
             
         }
     }

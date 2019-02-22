@@ -20,13 +20,28 @@ namespace FileDuplicator
             service = new ServiceCollection();
         }
 
-        public void Builder()
+        public enum StrategyOption { WebConfig, UnitTestScripts }
+
+        public void Builder(StrategyOption strategyOption)
         {
             //at this point all dependencies can be added
             //to the DI system via service collection
 
             service.AddScoped<IPathRetriever, AppsettingsRetriever>();
-            service.AddScoped<IAppLogic, AppLogic>();
+
+            switch (strategyOption)
+            {
+                case StrategyOption.UnitTestScripts:
+                    service.AddScoped<IAppLogic, AppLogicForCopyingScripts>();
+                    break;
+                case StrategyOption.WebConfig:
+                    service.AddScoped<IAppLogic, AppLogic>();
+                    break;
+                default:
+                    throw new Exception("No strategy chosen");
+            }
+
+            
             
             //configuration are heavily used in the .net core DI
             //for configuring services, so can be done usage of that
